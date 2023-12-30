@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import { Suspense, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+const locales = {
+  en: { title: 'English' },
+  lv: { title: 'Latviski' },
+  es: { title: 'Español' },
+};
 
 function App() {
+  const { t, i18n } = useTranslation();
+
+  const [messages, setMessages] = useState(0);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ul>
+        {Object.keys(locales).map((locale) => (
+          <li key={locale}><button style={{ fontWeight: i18n.resolvedLanguage === locale ? 'bold' : 'normal' }} type="submit" onClick={() => i18n.changeLanguage(locale)}>
+            {locales[locale].title}
+          </button></li>
+        ))}
+      </ul>
+      <h1>{t('main.header')}</h1>
+
+      <button onClick={() => setMessages(messages + 1)}>+1 message</button>
+      <p>
+        {t('main.new_messages', { count: messages })}
+      </p>
+
+      <p>
+        {t('main.current_date', { date: new Date() })}
+      </p>
+
+      <p>
+        {t('main.incoming_message', { from: 'Ann' })}<br/>
+        {t('main.message_contents', { body: 'How are you doing?', context: 'female' })}
+      </p>
     </div>
   );
 }
+export default App 
 
-export default App;
+// export default function WrappedApp() {
+//   return (
+//     <Suspense fallback="...loading">
+//       <App />
+//     </Suspense>
+//   );
+// }
